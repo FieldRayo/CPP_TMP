@@ -8,13 +8,19 @@ struct FixedString;
 template <std::size_t N>
 struct FixedString {
     std::array<char, N> data;
-    static constexpr std::size_t size = N - 1;
-
+    static constexpr std::size_t size = N;
+	
     constexpr FixedString(
-        const char (&str)[N]
+        const char (&str)[N + 1]
     ) noexcept {
-        for (std::size_t i{0}; i < N; ++i)
-            data[i] = str[i];
+		auto& d = data;
+		[&]<std::size_t... Is>(
+			std::index_sequence<Is...>
+		){
+			
+			((d[Is] = str[Is]), ...);
+
+		}(std::make_index_sequence<N>{});
     }
 
     constexpr char operator[](
@@ -23,6 +29,9 @@ struct FixedString {
         return data[index];
     }
 };
+
+template <std::size_t N>
+FixedString(const char (&str)[N]) -> FixedString<N - 1>;
 
 template <typename T, std::size_t N>
 class Stack;
