@@ -87,10 +87,6 @@ constexpr bool parse(
             c == '['
         ) {
             stack.push(c);
-
-            return 
-                parse<S, I + 1>(stack);
-
         } else {
             if (stack.empty())
                 return false;
@@ -104,10 +100,10 @@ constexpr bool parse(
                ) {
                 return false;
             }
-
-            return 
-                parse<S, I + 1>(stack);
         }
+
+		return 
+			parse<S, I + 1>(stack);
     }
 }
 
